@@ -16,3 +16,9 @@ class Signup(BaseModel):
 
 class SignupResponse(Signup):
     id: UUID
+
+
+class ChangePassword(BaseModel):
+    current_password: str
+    new_password: str
+    confirmed_password: str

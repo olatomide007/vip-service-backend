@@ -1,6 +1,6 @@
 from uuid import UUID
-from fastapi import APIRouter
-from .schemas import APIKey, Signup, SignupResponse
+from fastapi import APIRouter, HTTPException, status
+from .schemas import APIKey, Signup, SignupResponse, ChangePassword
 
 router = APIRouter()
 
@@ -23,3 +23,21 @@ async def get_user_api_key():
 
     # Send key string
     return userAPIKey
+
+
+@router.patch("/", response_model=ChangePassword)
+async def change_password(
+    change_password: ChangePassword
+):
+    # check old and new password must not be the same
+    if change_password.current_password == change_password.new_password:
+        raise HTTPException (status_code=404, detail= "Please choose a different password")
+
+    
+
+    # check new and confirm password are the same
+    if change_password.new_password != change_password.confirmed_password:
+        raise HTTPException (status_code=404, detail= "Confirmed password and new password must match")
+
+    return change_password 
+    
